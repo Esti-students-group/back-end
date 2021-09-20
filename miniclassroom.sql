@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : Dim 05 sep. 2021 à 11:21
+-- Généré le : lun. 20 sep. 2021 à 16:08
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.3.21
 
@@ -24,38 +24,38 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structure de la table `assister`
+-- Structure de la table `assist`
 --
 
-DROP TABLE IF EXISTS `assister`;
-CREATE TABLE IF NOT EXISTS `assister` (
-  `num_matricule` int(11) NOT NULL,
-  `code_matieres` int(11) NOT NULL,
-  PRIMARY KEY (`num_matricule`,`code_matieres`),
-  KEY `assister_COURS0_FK` (`code_matieres`)
+DROP TABLE IF EXISTS `assist`;
+CREATE TABLE IF NOT EXISTS `assist` (
+  `serialNumber` int(11) NOT NULL,
+  `materialCode` int(11) NOT NULL,
+  PRIMARY KEY (`serialNumber`,`materialCode`),
+  KEY `assister_COURS0_FK` (`materialCode`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cours`
+-- Structure de la table `courses`
 --
 
-DROP TABLE IF EXISTS `cours`;
-CREATE TABLE IF NOT EXISTS `cours` (
-  `code_matieres` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nom_cours` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `volume_horaire` int(11) NOT NULL,
-  `id_module` int(11) NOT NULL,
-  `id_professeur` int(11) NOT NULL,
-  PRIMARY KEY (`code_matieres`)
+DROP TABLE IF EXISTS `courses`;
+CREATE TABLE IF NOT EXISTS `courses` (
+  `materialCode` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `totalHours` int(11) NOT NULL,
+  `idModule` int(11) NOT NULL,
+  `idProfesseur` int(11) NOT NULL,
+  PRIMARY KEY (`materialCode`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Déchargement des données de la table `cours`
+-- Déchargement des données de la table `courses`
 --
 
-INSERT INTO `cours` (`code_matieres`, `nom_cours`, `volume_horaire`, `id_module`, `id_professeur`) VALUES
+INSERT INTO `courses` (`materialCode`, `name`, `totalHours`, `idModule`, `idProfesseur`) VALUES
 ('INFO_261', 'POWERSHELL', 30, 1, 1),
 ('INFO_240', 'CIRCUIT LOGIQUE', 26, 1, 2),
 ('INFO_250', 'BASES DE DONNEES', 30, 1, 3),
@@ -70,47 +70,146 @@ INSERT INTO `cours` (`code_matieres`, `nom_cours`, `volume_horaire`, `id_module`
 -- --------------------------------------------------------
 
 --
--- Structure de la table `emploi_du_temps`
+-- Structure de la table `have`
 --
 
-DROP TABLE IF EXISTS `emploi_du_temps`;
-CREATE TABLE IF NOT EXISTS `emploi_du_temps` (
-  `id_emploi_du_temps` int(11) NOT NULL AUTO_INCREMENT,
-  `date_de_cours` date NOT NULL,
-  `date_examen` date NOT NULL,
-  `duree_cours` time NOT NULL,
-  `id_proffesseur` int(11) NOT NULL,
-  PRIMARY KEY (`id_emploi_du_temps`),
-  KEY `EMPLOI_DU_TEMPS_PROFESSEURS_FK` (`id_proffesseur`)
+DROP TABLE IF EXISTS `have`;
+CREATE TABLE IF NOT EXISTS `have` (
+  `idTimetable` int(11) NOT NULL,
+  `serialNumber` int(11) NOT NULL,
+  PRIMARY KEY (`idTimetable`,`serialNumber`),
+  KEY `obtenir_ETUDIANTS0_FK` (`serialNumber`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `etudiants`
+-- Structure de la table `modules`
 --
 
-DROP TABLE IF EXISTS `etudiants`;
-CREATE TABLE IF NOT EXISTS `etudiants` (
-  `num_matricule` int(11) NOT NULL AUTO_INCREMENT,
-  `nom_etudiant` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `prenom_etudiant` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `niveau` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `contact_etudiant` int(11) NOT NULL,
-  `adresse_etudiant` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sexe_etudiant` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `age_etudiant` int(11) NOT NULL,
-  `nom_mail_etudiant` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type_compte_etudiant` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `mot_de_passe` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`num_matricule`)
+DROP TABLE IF EXISTS `modules`;
+CREATE TABLE IF NOT EXISTS `modules` (
+  `idModule` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `materialCode` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`idModule`),
+  KEY `MODULES_COURS_FK` (`materialCode`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `modules`
+--
+
+INSERT INTO `modules` (`idModule`, `name`, `materialCode`) VALUES
+(1, 'INFORMATIQUES', 'INFO'),
+(2, 'LANGUES', 'LAN'),
+(3, 'MATHEMATIQUES', 'MATHS'),
+(4, 'ENTREPRISES', 'ENTR');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `note`
+--
+
+DROP TABLE IF EXISTS `note`;
+CREATE TABLE IF NOT EXISTS `note` (
+  `materialCode` int(11) NOT NULL,
+  `serialNumber` int(11) NOT NULL,
+  `idNote` int(11) NOT NULL,
+  `noteExercises` float NOT NULL,
+  `noteExam` float NOT NULL,
+  PRIMARY KEY (`materialCode`,`serialNumber`),
+  KEY `noter_ETUDIANTS0_FK` (`serialNumber`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `professors`
+--
+
+DROP TABLE IF EXISTS `professors`;
+CREATE TABLE IF NOT EXISTS `professors` (
+  `idProfessor` int(11) NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lastname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contact` int(11) NOT NULL,
+  `age` int(11) NOT NULL,
+  `sex` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `typeCompte` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`idProfessor`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `professors`
+--
+
+INSERT INTO `professors` (`idProfessor`, `firstname`, `lastname`, `contact`, `age`, `sex`, `email`, `typeCompte`, `password`, `address`) VALUES
+(1, 'ANDRINIRINIAIMALAZA', 'Fanambinantsoa Philibert', 345412589, 35, 'Masculin', 'fanambinantsoa.philibert.andriniriniaimalaza@esti', 'Invité', '10a10a10', 'Antanimena'),
+(2, 'RAZAFINDRAKOTO', ' Aimé', 341125879, 55, 'Masculin', 'aime.razafindrakoto@esti.mg', 'Invité', '10b10b10', 'Antanimena'),
+(3, 'ANDRIANARIMBAHY', 'Dina Lalaniony', 341025879, 39, 'Masculin', 'dinalalaniony.andrianarimbahy@esti.mg', 'Invité', '10c10c10', 'Antanimena'),
+(4, ' RALANDISON', ' Gilde ', 348568912, 37, 'Masculin', 'gilde.ralandison', 'Invité', '10d10d10', 'Antanimena'),
+(5, 'RANDRIAMISY', 'Hasimbola', 348569871, 30, 'Masculin', 'hasimbola.randriamisy@esti.mg', 'Invité', '10e10e10', 'Antanimena'),
+(6, 'RAKOTONIRINA', ' Hariniony', 341025896, 33, 'Masculin', 'hariniony.rakotonirina@esti.mg', 'Invité', '10f10f10', 'Antanimena'),
+(7, 'RAZONARISOA', 'Nirina', 344528945, 38, 'Masculin', 'nirina.razonarisoa@esti.mg', 'Invité', '10g10g10', 'Antanimena'),
+(8, 'RAHARIARISOA', 'Michèle', 348596572, 32, 'Feminin', 'michele.rahariarisoa@esti.mg', 'Invité', '10h10h10', 'Antanimena'),
+(9, 'RABEMANANJARA', 'Andry', 348597621, 48, 'Masculin', 'andry.rabemananjara@esti.mg', 'Invité', '10i10i10', 'Antanimena'),
+(10, 'RAJAOFERA', 'José', 347581242, 60, 'Masculin', 'jose.rajaofera@esti.mg', 'Invité', '10j10j10', 'Antanimena'),
+(11, 'ANTILAHY', 'Christelle', 341215875, 30, 'Feminin', 'herimpitia.antilahy@esti.mg', 'Invité', '10k10k10', 'Antanimena'),
+(12, 'RAZANAMPARANY', 'Xavier', 348568571, 50, 'Masculin', 'xavier.razanamparany@esti.mg', 'Invité', '10l10l10', 'Antanimena'),
+(13, 'Ndriantiana', 'Miranto', 342585612, 28, 'Feminin', 'miranto.ndriantiana@esti.mg-', 'Invité', '10m10m10', 'Antanimena');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `publications`
+--
+
+DROP TABLE IF EXISTS `publications`;
+CREATE TABLE IF NOT EXISTS `publications` (
+  `numberPublication` int(11) NOT NULL AUTO_INCREMENT,
+  `patterns` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `datePublication` date NOT NULL,
+  `timePublication` time NOT NULL,
+  `serialNumber` int(11) NOT NULL,
+  `idProfessor` int(11) NOT NULL,
+  `idClasse` int(11) NOT NULL,
+  PRIMARY KEY (`numberPublication`),
+  KEY `MESSAGES_PUBLICATIONS_ETUDIANTS_FK` (`serialNumber`),
+  KEY `MESSAGES_PUBLICATIONS_PROFESSEURS0_FK` (`idProfessor`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `students`
+--
+
+DROP TABLE IF EXISTS `students`;
+CREATE TABLE IF NOT EXISTS `students` (
+  `serialNumber` int(11) NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lastname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `level` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contact` int(11) NOT NULL,
+  `address` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sex` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `age` int(11) NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `typeCompte` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`serialNumber`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20201040 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Déchargement des données de la table `etudiants`
+-- Déchargement des données de la table `students`
 --
 
-INSERT INTO `etudiants` (`num_matricule`, `nom_etudiant`, `prenom_etudiant`, `niveau`, `contact_etudiant`, `adresse_etudiant`, `sexe_etudiant`, `age_etudiant`, `nom_mail_etudiant`, `type_compte_etudiant`, `mot_de_passe`) VALUES
+INSERT INTO `students` (`serialNumber`, `firstname`, `lastname`, `level`, `contact`, `address`, `sex`, `age`, `email`, `typeCompte`, `password`) VALUES
 (2020101, ' Amine Berajai', 'Rohan', 'L1G1', 346572584, 'Behoririka', 'Masculin', 18, 'rohan.amine.berajai@esti.mg', 'Administrateur', '1a1a1a1a'),
 (2020102, 'Andriamanantoanina', 'Tsiory Ryan ', 'L1G1', 342015640, 'Ankadifotsy', 'Masculin', 19, '	\r\ntsiory.ryan.andriamanantoanina@esti.mg', 'Administrateur', '1b1b1b1b'),
 (2020103, 'Andrianarijaona', 'Nomena Fitia', 'L1G1', 341102548, 'Ambatoroka', 'Feminin', 20, '	\r\nnomena.fitia.andrianarijaona@esti.mg', 'Administrateur', '1c1c1c1c'),
@@ -154,118 +253,19 @@ INSERT INTO `etudiants` (`num_matricule`, `nom_etudiant`, `prenom_etudiant`, `ni
 -- --------------------------------------------------------
 
 --
--- Structure de la table `messages_publications`
+-- Structure de la table `timetable`
 --
 
-DROP TABLE IF EXISTS `messages_publications`;
-CREATE TABLE IF NOT EXISTS `messages_publications` (
-  `num_publication` int(11) NOT NULL AUTO_INCREMENT,
-  `motifs` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `date_de_publication` date NOT NULL,
-  `heure_de_publication` time NOT NULL,
-  `num_matricule` int(11) NOT NULL,
-  `id_proffesseur` int(11) NOT NULL,
-  `id_cours` int(11) NOT NULL,
-  PRIMARY KEY (`num_publication`),
-  KEY `MESSAGES_PUBLICATIONS_ETUDIANTS_FK` (`num_matricule`),
-  KEY `MESSAGES_PUBLICATIONS_PROFESSEURS0_FK` (`id_proffesseur`)
+DROP TABLE IF EXISTS `timetable`;
+CREATE TABLE IF NOT EXISTS `timetable` (
+  `idTimetable` int(11) NOT NULL AUTO_INCREMENT,
+  `dateClasse` date NOT NULL,
+  `dateExam` date NOT NULL,
+  `courseDuration` time NOT NULL,
+  `idProfessor` int(11) NOT NULL,
+  PRIMARY KEY (`idTimetable`),
+  KEY `EMPLOI_DU_TEMPS_PROFESSEURS_FK` (`idProfessor`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `modules`
---
-
-DROP TABLE IF EXISTS `modules`;
-CREATE TABLE IF NOT EXISTS `modules` (
-  `id_module` int(11) NOT NULL AUTO_INCREMENT,
-  `nom_module` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `code_matieres` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_module`),
-  KEY `MODULES_COURS_FK` (`code_matieres`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `modules`
---
-
-INSERT INTO `modules` (`id_module`, `nom_module`, `code_matieres`) VALUES
-(1, 'INFORMATIQUES', 'INFO'),
-(2, 'LANGUES', 'LAN'),
-(3, 'MATHEMATIQUES', 'MATHS'),
-(4, 'ENTREPRISES', 'ENTR');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `noter`
---
-
-DROP TABLE IF EXISTS `noter`;
-CREATE TABLE IF NOT EXISTS `noter` (
-  `code_matieres` int(11) NOT NULL,
-  `num_matricule` int(11) NOT NULL,
-  `id_note` int(11) NOT NULL,
-  `note_devoir` float NOT NULL,
-  `note_examen` float NOT NULL,
-  PRIMARY KEY (`code_matieres`,`num_matricule`),
-  KEY `noter_ETUDIANTS0_FK` (`num_matricule`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `obtenir`
---
-
-DROP TABLE IF EXISTS `obtenir`;
-CREATE TABLE IF NOT EXISTS `obtenir` (
-  `id_emploi_du_temps` int(11) NOT NULL,
-  `num_matricule` int(11) NOT NULL,
-  PRIMARY KEY (`id_emploi_du_temps`,`num_matricule`),
-  KEY `obtenir_ETUDIANTS0_FK` (`num_matricule`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `professeurs`
---
-
-DROP TABLE IF EXISTS `professeurs`;
-CREATE TABLE IF NOT EXISTS `professeurs` (
-  `id_proffesseur` int(11) NOT NULL AUTO_INCREMENT,
-  `nom_professeur` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `prenom_professeur` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `contact_professeur` int(11) NOT NULL,
-  `age_professeur` int(11) NOT NULL,
-  `sexe_professeur` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nom_mail_professeur` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type_compte_professeur` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `mot_de_passe` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `adresse_professeur` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_proffesseur`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `professeurs`
---
-
-INSERT INTO `professeurs` (`id_proffesseur`, `nom_professeur`, `prenom_professeur`, `contact_professeur`, `age_professeur`, `sexe_professeur`, `nom_mail_professeur`, `type_compte_professeur`, `mot_de_passe`, `adresse_professeur`) VALUES
-(1, 'ANDRINIRINIAIMALAZA', 'Fanambinantsoa Philibert', 345412589, 35, 'Masculin', 'fanambinantsoa.philibert.andriniriniaimalaza@esti', 'Invité', '10a10a10', 'Antanimena'),
-(2, 'RAZAFINDRAKOTO', ' Aimé', 341125879, 55, 'Masculin', 'aime.razafindrakoto@esti.mg', 'Invité', '10b10b10', 'Antanimena'),
-(3, 'ANDRIANARIMBAHY', 'Dina Lalaniony', 341025879, 39, 'Masculin', 'dinalalaniony.andrianarimbahy@esti.mg', 'Invité', '10c10c10', 'Antanimena'),
-(4, ' RALANDISON', ' Gilde ', 348568912, 37, 'Masculin', 'gilde.ralandison', 'Invité', '10d10d10', 'Antanimena'),
-(5, 'RANDRIAMISY', 'Hasimbola', 348569871, 30, 'Masculin', 'hasimbola.randriamisy@esti.mg', 'Invité', '10e10e10', 'Antanimena'),
-(6, 'RAKOTONIRINA', ' Hariniony', 341025896, 33, 'Masculin', 'hariniony.rakotonirina@esti.mg', 'Invité', '10f10f10', 'Antanimena'),
-(7, 'RAZONARISOA', 'Nirina', 344528945, 38, 'Masculin', 'nirina.razonarisoa@esti.mg', 'Invité', '10g10g10', 'Antanimena'),
-(8, 'RAHARIARISOA', 'Michèle', 348596572, 32, 'Feminin', 'michele.rahariarisoa@esti.mg', 'Invité', '10h10h10', 'Antanimena'),
-(9, 'RABEMANANJARA', 'Andry', 348597621, 48, 'Masculin', 'andry.rabemananjara@esti.mg', 'Invité', '10i10i10', 'Antanimena'),
-(10, 'RAJAOFERA', 'José', 347581242, 60, 'Masculin', 'jose.rajaofera@esti.mg', 'Invité', '10j10j10', 'Antanimena'),
-(11, 'ANTILAHY', 'Christelle', 341215875, 30, 'Feminin', 'herimpitia.antilahy@esti.mg', 'Invité', '10k10k10', 'Antanimena'),
-(12, 'RAZANAMPARANY', 'Xavier', 348568571, 50, 'Masculin', 'xavier.razanamparany@esti.mg', 'Invité', '10l10l10', 'Antanimena'),
-(13, 'Ndriantiana', 'Miranto', 342585612, 28, 'Feminin', 'miranto.ndriantiana@esti.mg-', 'Invité', '10m10m10', 'Antanimena');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
